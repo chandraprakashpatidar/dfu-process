@@ -30,68 +30,69 @@ static Future<void> disconnectFromDevice(BluetoothDeviceModel device) async {
 
 
 
-  static Future<bool>startDFUUpdate(BluetoothDeviceModel device) async {
+//   static Future<bool>startDFUUpdate(BluetoothDeviceModel device) async {
     
-  try {
+//   try {
 
-    print('Starting DFU update for device ID: ${device.id}');
+//     print('Starting DFU update for device ID: ${device.id}');
 
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['zip'],
-    );
+//     FilePickerResult? result = await FilePicker.platform.pickFiles(
+//       type: FileType.custom,
+//       allowedExtensions: ['zip'],
+//     );
 
-    if (result != null && result.files.isNotEmpty) {
-      File file = File(result.files.single.path!);
+//     if (result != null && result.files.isNotEmpty) {
+//       File file = File(result.files.single.path!);
 
-      final dfuResult = await NordicDfu().startDfu(
-        device.id,
-        file.path,
-        fileInAsset: false,
-        onDeviceConnecting: (String address) {
-          debugPrint('Device Address: $address');
-        },
-        onProgressChanged: (
-          String deviceAddress,
-          int percent,
-          double speed,
-          double avgSpeed,
-          int currentPart,
-          int totalParts,
-        ) {
-          debugPrint('Device Address: $deviceAddress, Percent: $percent');
-          // Notify the progress to the UI or manage it accordingly
-          print("wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww$percent");
-        },
-      );
+//       final dfuResult = await NordicDfu().startDfu(
+//         device.id,
+//         file.path,
+//         fileInAsset: false,
+//         onDeviceConnecting: (String address) {
+//           debugPrint('Device Address: $address');
+//         },
+//         onProgressChanged: (
+//           String deviceAddress,
+//           int percent,
+//           double speed,
+//           double avgSpeed,
+//           int currentPart,
+//           int totalParts,
+//         ) {
+//           debugPrint('Device Address: $deviceAddress, Percent: $percent');
+//           // Notify the progress to the UI or manage it accordingly
+//           print("wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww$percent");
+//         },
+//       );
 
-      if (dfuResult == dfuResult) {
-        print('DFU Update Completed Successfully');
+//       if (dfuResult == dfuResult) {
+//         print('DFU Update Completed Successfully');
 
         
-        return true;
-      } else {
-        print('DFU Update Failed: $dfuResult');
-        return false;
-      }
-    } else {
-      // User canceled file selection
-      print('File selection canceled');
-      return false;
-    }
-  } catch (e) {
-    print('Error starting DFU update: $e');
-    return false;
-  }
-}
+//         return true;
+//       } else {
+//         print('DFU Update Failed: $dfuResult');
+//         return false;
+//       }
+//     } else {
+//       // User canceled file selection
+//       print('File selection canceled');
+//       return false;
+//     }
+//   } catch (e) {
+//     print('Error starting DFU update: $e');
+//     return false;
+//   }
+// }
+
+
+
+
+
    Future<void> scanDevice() async {
     try {
-      
       // Start scanning for devices
         await FlutterBluePlus.startScan(timeout: const Duration(seconds: 5));
-
-
-
       // Delay for 5 seconds (or however long you want to scan)
       await Future.delayed(Duration(seconds: 5));
 

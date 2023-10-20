@@ -30,17 +30,19 @@ class HomePage extends StatelessWidget {
   ),
 ),
 
-                const SizedBox(height: 20,),
+                const SizedBox(height: 10,),
                 Center(
-                  child: ElevatedButton(
-                    onPressed: () {
+  child: Container(
+    width: 200, // Set your desired width here
+    child: ElevatedButton(
+      onPressed: () {
+        controller.scanDevice();
+      },
+      child: Text("Scan", style: TextStyle(color: Colors.yellow)),
+    ),
+  ),
+),
 
-                  controller.scanDevice();
-
-                    },
-                    child: Text("Scan", style: TextStyle(color: Colors.yellow)),
-                  ),
-                ),
                 SizedBox(height: 20,),
                 StreamBuilder<List<ScanResult>>(
                   stream: controller.scanResultStream,
