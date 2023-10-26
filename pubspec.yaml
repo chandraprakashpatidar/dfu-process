@@ -34,6 +34,7 @@ dependencies:
   permission_handler: ^11.0.1
   nordic_dfu: ^5.2.0
   file_picker: ^6.0.0
+  fl_chart: ^0.41.0
 
  
   get: ^4.6.5
@@ -62,7 +63,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images.png
-
+    - assets/download.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
