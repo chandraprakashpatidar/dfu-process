@@ -63,7 +63,7 @@ class _SignupPageState extends State<SignupPage> {
                     height: 150,
                   ),
                 ),
-SizedBox(height: 150),
+SizedBox(height: 80),
        Row(
       children: <Widget>[
         Expanded( // Use Expanded to make the TextFormField take up remaining space

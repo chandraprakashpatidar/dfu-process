@@ -1,41 +1,82 @@
 import 'package:flutter/material.dart';
-//import 'package:http/http.dart' as http;
+import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:bbbb/login and signup/signup.dart';
+import 'dart:convert';
 
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 class _LoginPageState extends State<LoginPage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _usernameController = TextEditingController();
   bool _isPasswordVisible = false;
   bool _isChecked = false;
+String successMessage = '';
+String errorMessage = '';
 
-// Future  Loginuser() async{
-//    final String apiUrl='http://localhost:3001/data/login/';
-// final response= await http.post(Uri.parse(apiUrl),
+  Future<void> Loginuser() async {
+    print("login");
+    final String apiUrl = 'http://10.0.2.2:4000/api/v1/login';
+    print("apiUrl: $apiUrl");
+    final Map<String, String> requestBody = {
+      'email': _usernameController.text,
+      'password': _passwordController.text,
+    };
 
-// body: {
+    try {
+      print("try");
+      final response = await http.post(Uri.parse(apiUrl), body: requestBody);
+      print("res----------------------,$response");
+      final responseBody = response.body;
+      print("responseBody-----------------,$responseBody");
+      if (response.statusCode == 201) {
+        print("user login successfully");
+        setState(() {
+          successMessage = "User login successful";
+          errorMessage = ''; 
+        });
+  ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(successMessage),
+          ),
+        );
+// Decode the JSON response to get the token
+      final decodedResponse = json.decode(responseBody);
+      final token = decodedResponse['token'];
+      print("decodetoken-----------------,$decodedResponse");
+      print(token);
 
-// 'username':_usernameController.text ,
-// 'password':_passwordController.text ,
-// }
+// Navigator.push(context, MaterialPageRoute(builder: (context) => SignupPage()));
+       } else {
+        setState(() {
+          errorMessage = "Login failed. Please check your credentials.";
+          successMessage = ''; 
+        });
 
-// );
-//   //print('Response status code: ${response.statusCode}');
-//     print('Response body: ${response.body}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(successMessage != '' ? successMessage : errorMessage),
+          ),
+        );
+        print("Login failed. Status code: ${response.statusCode}");
+      }
+    } catch (error) {
+      setState(() {
+        errorMessage = "An error occurred. Please try again later.";
+        successMessage = ''; 
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(successMessage != '' ? successMessage : errorMessage),
+        ),
+      );
 
-// if(response.statusCode==200)
-// {
-// print("user login sucessfully");
-//  Navigator.pushReplacementNamed(context, '/signup');
-// }
-// else
-// {
-//   print("login faild");
-// }
-// }
+      print("An error occurred: $error");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,25 +155,23 @@ Row(
                     ),
                   ],
                 ),
- Row(
+                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Container(
                       width: 240,
                       child: ElevatedButton(
-  onPressed: () {
-    print("hello");
-    // var name=int.parse(_usernameController.text.toString());
-    // var password=int.parse(_passwordController.toString());
-    // print("USERMAE,$name");
-    // print(_passwordController);
-    // print("password,$password");
-    // Loginuser();
-    Navigator.push(context, MaterialPageRoute(builder: (context) => SignupPage()));
-  },
-  child: Text('Sign in'), // Change the text to "Sign in"
-),
-
+                        onPressed: () {
+                          print("hello");
+                          var username = _usernameController.text.toString();
+                          var password = _passwordController.text.toString();
+                          print("USERNAME: $username");
+                          print("PASSWORD: $password");
+                           Loginuser();
+                          
+                        },
+                        child: Text('Sign in'),
+                      ),
                     ),
                   ],
                 ),

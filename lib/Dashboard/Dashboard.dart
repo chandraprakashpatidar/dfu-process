@@ -4,6 +4,7 @@ import 'package:bbbb/Dashboard/shipmentpage.dart';
 import 'package:bbbb/Dashboard/NotificationPage.dart';
 import 'package:bbbb/Dashboard/userprofile.dart';
 import 'package:bbbb/Dashboard/DashboardBox.dart';
+import 'package:url_launcher/url_launcher.dart';
 class DashboardPage extends StatefulWidget {
   @override
   _DashboardPageState createState() => _DashboardPageState();
@@ -11,7 +12,8 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   int _selectedIndex = 0;
-
+ TextEditingController searchController = TextEditingController(); 
+ String searchResult = ""; 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -29,6 +31,36 @@ if (index == 0) {
       }
     });
   }
+void _onSearchSubmitted(String query) async {
+  final googleMapsUrl = 'https://www.google.com/maps?q=${Uri.encodeQueryComponent(query)}';
+
+
+  if (await canLaunch(googleMapsUrl)) {
+    print("if");
+    await launch(googleMapsUrl);
+    setState(() {
+      // Update the search result when the URL is launched
+      searchResult = query;
+    });
+  } else {
+    print("else");
+    print('Could not launch $googleMapsUrl. Opening in a web browser instead.');
+
+    // If can't launch in Google Maps, try opening in a web browser
+    final webUrl = 'https://www.google.com/maps/search/?api=1&query=${Uri.encodeQueryComponent(query)}';
+    print(await canLaunch(webUrl));
+    if (await canLaunch(webUrl)) {
+      await launch(webUrl);
+      setState(() {
+        searchResult = query;
+      });
+    } else {
+      print("esle2");
+      print('Could not launch $webUrl in a web browser.');
+      // Handle the case where the URL cannot be launched, even in a web browser.
+    }
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +99,9 @@ if (index == 0) {
                   ),
                   SizedBox(width: 10.0), // Spacing between icon and TextField
                   Expanded(
-                    child: TextField(
+                     child: TextField(
+                      controller: searchController,
+                      onSubmitted: _onSearchSubmitted, // Call this function when search is submitted
                       decoration: InputDecoration(
                         hintText: "Search", // Placeholder text
                         hintStyle: TextStyle(color: Colors.grey),
@@ -81,7 +115,7 @@ if (index == 0) {
           ),
           Expanded(
             child: Center(
-              // Your dashboard content goes here
+              child: Text(searchResult), // Display the search result here
             ),
           ),
         ],
