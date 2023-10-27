@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:bbbb/login and signup/signup.dart';
 import 'dart:convert';
+import 'package:bbbb/api_endPoint/api_endpoints.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -19,7 +20,8 @@ String errorMessage = '';
 
   Future<void> Loginuser() async {
     print("login");
-    final String apiUrl = 'http://10.0.2.2:4000/api/v1/login';
+   // final String apiUrl = 'http://10.0.2.2:4000/api/v1/login';
+    final String apiUrl = loginApiUrl;
     print("apiUrl: $apiUrl");
     final Map<String, String> requestBody = {
       'email': _usernameController.text,
