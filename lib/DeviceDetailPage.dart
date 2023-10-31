@@ -1,8 +1,10 @@
 // DeviceDetailPage.dart
 import 'package:flutter/material.dart';
 import 'BluetoothDeviceModel.dart';
-import 'package:bbbb/controller/blue.dart';
-import 'package:bbbb/DFUUpdateScreen.dart';
+//import 'package:bbbb/controller/blue.dart';
+import 'package:mobileapp/controller/blue.dart';
+import 'package:mobileapp/DFUUpdateScreen.dart';
+//import 'package:bbbb/DFUUpdateScreen.dart';
 
 class DeviceDetailPage extends StatefulWidget {
   final BluetoothDeviceModel device;
@@ -54,7 +56,7 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
             // Add the "Start DFU Update" button here
             ElevatedButton(
              onPressed: _handleDFUUpdate,
-              child: Text('Start DFU Update'),
+              child: Text('Start DFUUpdate'),
             ),
           ],
         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:bbbb/Dashboard/Dashboard.dart';
+//import 'package:bbbb/Dashboard/Dashboard.dart';
+import 'package:mobileapp/Dashboard/Dashboard.dart';
 class SignupPage extends StatefulWidget {
   @override
   _SignupPageState createState() => _SignupPageState();
@@ -190,9 +191,7 @@ SizedBox(height: 80),
 
               
               
-              
-              
-              Row(
+                            Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Container(
@@ -200,7 +199,7 @@ SizedBox(height: 80),
                       child: ElevatedButton(
                         onPressed: () {
                       print("hello");
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardPage()));
+                 // Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardPage()));
                    },
                 child: Text('Sign up'), // Change the text to "Sign in"
 ),

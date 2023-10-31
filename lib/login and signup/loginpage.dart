@@ -1,26 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:bbbb/login and signup/signup.dart';
+//import 'package:bbbb/login and signup/signup.dart';
 import 'dart:convert';
-import 'package:bbbb/api_endPoint/api_endpoints.dart';
-
+//import 'package:bbbb/api_endPoint/api_endpoints.dart';
+import 'package:mobileapp/api_endPoint/api_endpoints.dart';
+import 'package:mobileapp/login and signup/signup.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:mobileapp/Dashboard/Dashboard.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  TextEditingController _passwordController = TextEditingController();
   TextEditingController _usernameController = TextEditingController();
-  bool _isPasswordVisible = false;
-  bool _isChecked = false;
-String successMessage = '';
-String errorMessage = '';
+  TextEditingController _passwordController = TextEditingController();
+   
+   bool _isPasswordVisible = false;
+    bool _isChecked = false;
+    bool isLoggedIn = false;
 
+   String successMessage = '';
+   String errorMessage = '';
+// user login process------------------
   Future<void> Loginuser() async {
     print("login");
-   // final String apiUrl = 'http://10.0.2.2:4000/api/v1/login';
+    
+  // final String apiUrl = 'http://10.0.2.2:4000/api/v1/login';
     final String apiUrl = loginApiUrl;
     print("apiUrl: $apiUrl");
     final Map<String, String> requestBody = {
@@ -33,31 +42,45 @@ String errorMessage = '';
       final response = await http.post(Uri.parse(apiUrl), body: requestBody);
       print("res----------------------,$response");
       final responseBody = response.body;
-      print("responseBody-----------------,$responseBody");
+      final token = response.body;
+       Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+       print("decodeToken---------->,$decodedToken");
+      // print("responseBody-----------------,$responseBody");
       if (response.statusCode == 201) {
         print("user login successfully");
+        //apply session-----------
+      final sharedPreferences = await SharedPreferences.getInstance();
+      print("session----------,$sharedPreferences");
+     sharedPreferences.setString('token', token);
+     sharedPreferences.setString('email', _usernameController.text);
+     sharedPreferences.setString('password', _passwordController.text);
         setState(() {
           successMessage = "User login successful";
           errorMessage = ''; 
         });
-  ScaffoldMessenger.of(context).showSnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(successMessage),
           ),
         );
-// Decode the JSON response to get the token
-      final decodedResponse = json.decode(responseBody);
-      final token = decodedResponse['token'];
-      print("decodetoken-----------------,$decodedResponse");
-      print(token);
+      //  _usernameController.clear();
+      // _passwordController.clear();
 
-// Navigator.push(context, MaterialPageRoute(builder: (context) => SignupPage()));
+       //  Navigator.push(context, MaterialPageRoute(builder: (context) => SignupPage()));
+      //      Decode the JSON response to get the token
+  Navigator.pushAndRemoveUntil(
+  context,
+  MaterialPageRoute(
+    builder: (context) => DashboardPage(decodedToken: decodedToken),
+  ),
+  (route) => false, // This predicate will always return false
+);
+
        } else {
         setState(() {
           errorMessage = "Login failed. Please check your credentials.";
           successMessage = ''; 
         });
-
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(successMessage != '' ? successMessage : errorMessage),
@@ -80,6 +103,24 @@ String errorMessage = '';
     }
   }
 
+Future<void>forgotpassword() async
+
+{
+
+print("forgotpassword");
+
+
+}
+
+
+
+
+
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,8 +134,8 @@ String errorMessage = '';
           decoration: BoxDecoration(),
          child: SingleChildScrollView(
           child: Column(
-children: [
-Padding(
+   children: [
+    Padding(
                   padding: EdgeInsets.only(top: 0.0), // Add padding to the top of the image
                   child: Image.asset(
                     'assets/download.png',
@@ -119,7 +160,7 @@ Row(
     ),
      SizedBox(height: 10),
                 TextFormField(
-                  keyboardType: TextInputType.number,
+                 // keyboardType: TextInputType.number,
                   controller: _passwordController,
                   obscureText: !_isPasswordVisible,
                   decoration: InputDecoration(
@@ -183,6 +224,8 @@ Row(
     GestureDetector( // Wrap the forgetpassword? text with GestureDetector
       onTap: () {
         print("forgatpasswordsssss");
+
+        forgotpassword();
         // Handle forget password click action here
         // For example, you can show a dialog or navigate to a password reset screen.
       },

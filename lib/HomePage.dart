@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:bbbb/controller/blue.dart';
+//import 'package:bbbb/controller/blue.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:get/state_manager.dart';
 import 'DeviceDetailPage.dart';
 import 'BluetoothDeviceModel.dart';
+import 'package:mobileapp/controller/blue.dart';
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
