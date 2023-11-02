@@ -22,7 +22,7 @@ class _DailyReportSwitchState extends State<DailyReportSwitch> {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text("Enable Daily Report"),
-      tileColor: Colors.grey,
+      //tileColor: Colors.grey,
       trailing: Switch(
         value: dailyReportEnabled,
         onChanged: (newValue) {

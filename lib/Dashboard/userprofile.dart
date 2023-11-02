@@ -54,7 +54,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
         userEmail = officialEmail;
       });
     }
-
     print("Official Email: $officialEmail");
     print("email");
 // if (decodedToken.containsKey('email')) {
@@ -67,9 +66,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
     print('Stored Password: $password');
     print("token: $token");
   }
-
-  
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,6 +76,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
       body: ListView(
         children: [
           UserAvatarCard(userEmail: userEmail),
+         //  buildListItem("Email", ""),
+           //Divider(),
           Row(
             children: [
               Padding(
@@ -93,8 +91,11 @@ class _UserProfilePageState extends State<UserProfilePage> {
               ),
             ],
           ),
+          //  Divider(),
           DailyReportSwitch(initialValue: dailyReportEnabled),
+         //  Divider(),
           AlertsSwitch(initialValue: alertsEnabled),
+           Divider(),
           SmsSwitchListItem(
             label: "SMS",
             switchValue: smsEnabled,
@@ -105,7 +106,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
               });
             },
           ),
-
+          Divider(),
            FirmwareArrowListItem(
             label: "Firmware",
             subtitle: "firmware_Update",
@@ -115,15 +116,27 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 MaterialPageRoute(builder: (context) => HomePage()),
               );
             },
-          ),          
+          ),   
+           Divider(),      
+
           //buildListItem("Firmware", "1.0.0"),
           //buildListItemWithArrow("Firmware", "firmware_Update", context),
           buildListItem("Add Device", "Add a New Device"),
-          buildListItem("Access Policy", "Manage Access Policy"),
-          buildListItem("About Us", "Learn About Us"),
-          buildListItem("Terms and Conditions", "Read Our Terms"),
-          LogoutListItem(label: "Logout", value: "Log Out"),
+            Divider(),      
 
+          
+
+          buildListItem("Access Policy", "Manage Access Policy"),
+            Divider(),      
+
+          buildListItem("About Us", "Learn About Us"),
+            Divider(),      
+
+          buildListItem("Terms and Conditions", "Read Our Terms"),
+            Divider(),      
+
+          LogoutListItem(label: "Logout", value: "Log Out"),
+Divider(),
         ],
       ),
     );

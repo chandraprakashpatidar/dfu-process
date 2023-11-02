@@ -77,7 +77,3 @@ Map<String, dynamic> decodedToken = token != null ? JwtDecoder.decode(token) : {
     return  LoadingScreen();
   }
 }
-// {
-//   "email": "suraj.subramoniam@honeywell.com",
-//   "password": "suraj1@honeywell"
-// }suraj.subramoniam@honeywell.com
