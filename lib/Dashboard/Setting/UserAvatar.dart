@@ -101,7 +101,8 @@ class _UserAvatarCardState extends State<UserAvatarCard> {
   MaterialPageRoute(
     builder: (context) => UserDetailsPage(
       userEmail: widget.userEmail,
-      userImage: _userImage, // Pass the user's profile picture here
+      userImage: _userImage,
+      subtitle: "Admin", // Pass the user's profile picture here
     ),
   ),
 );

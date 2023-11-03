@@ -66,6 +66,15 @@ flutter:
     - assets/images.png
     - assets/download.png
     - assets/User_icon.png
+    - assets/myimage.png 
+    - assets/tech.png
+    - assets/tech1.png
+    - assets/tech2.png
+    - assets/images1.png
+    - assets/images2.png
+    - assets/i.jpeg
+    - assets/im.jpg
+    - assets/kk.jpg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
