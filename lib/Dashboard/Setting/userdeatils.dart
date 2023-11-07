@@ -1,275 +1,420 @@
+
+
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:io';
 
 class UserDetailsPage extends StatefulWidget {
-  final String? userEmail;
-  final File? userImage;
-  final String? subtitle;
-  UserDetailsPage({this.userEmail, this.userImage, this.subtitle});
-
   @override
   _UserDetailsPageState createState() => _UserDetailsPageState();
 }
 
 class _UserDetailsPageState extends State<UserDetailsPage> {
-bool _isPasswordVisible = false;
-bool _isConfromPasswordVisible =false;
-  final TextEditingController usernameController = TextEditingController();
-  final TextEditingController officialEmailController = TextEditingController();
-  final TextEditingController addressController = TextEditingController();
-  final TextEditingController cityController = TextEditingController();
-  final TextEditingController countryController = TextEditingController();
-  final TextEditingController stateController = TextEditingController();
+  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _EmailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  TextEditingController _ConfrompasswordController = TextEditingController();
+  TextEditingController _OrgnazationController = TextEditingController();
+  bool _isPasswordVisible = false;
+  bool _isConfrompasswordVisible = false;
+  bool _isAlertsEnabled = false;
+  bool _isDailyEnabledReports = false;
+  Map<String, bool> shipmentCheckboxes = {};
+String filter = '';
+Map<String, bool> selectedShipments = {};
+String? selectedShipment;
 
+List<String> roleOptions = ['Admin', 'User'];
+String selectedUserRole = 'User';
+  List<String> shipments = [
+    'Shipment 1',
+    'Shipment 2',
+    'Shipment 3',
+    'Shipment 4',
+    'Shipment 5',
+    'Shipment 6',
+    'Shipment 7',
+    'Shipment 8',
+    'Shipment 9',
+    'Shipment 10',
+    'Shipment 11',
+    'Shipment 12',
+    'Shipment 13',
+    'Shipment 14',
+  ]; // Replace this with your shipment data
+List<String> getFilteredShipments(String query) {
+  return shipments.where((shipment) {
+    return shipment.toLowerCase().contains(query.toLowerCase());
+  }).toList();
+}
+
+
+void _registerUser() {
+  print("register");
+  final String role = selectedUserRole; // Replace with your logic to get the selected user role
+  final String username = _usernameController.text;
+  final String email = _EmailController.text;
+  final String password = _passwordController.text;
+  final String confirmPassword = _ConfrompasswordController.text;
+  final String organization = _OrgnazationController.text;
+ final MyShipnets =selectedShipment;
+final bool enableDailyReports = _isDailyEnabledReports;
+final bool enableAlerts = _isAlertsEnabled;
+  print(enableDailyReports);
+ print(role);
+ print(username);
+ print(email);
+ print(password);
+ print(confirmPassword);
+ print(organization);
+ print(MyShipnets);
+ print(enableDailyReports);
+ print("rrrrrrrrr,$enableAlerts");
+  // Now, you can send this data to your backend API using HTTP requests
+  // Make an HTTP POST request to your API endpoint with this data
+  // Example using the 'http' package:
+
+  // Map<String, dynamic> userData = {
+  //   'role': role,
+  //   'username': username,
+  //   'email': email,
+  //   'password': password,
+  //   'confirmPassword': confirmPassword,
+  //   'organization': organization,
+  //   'selectedShipments': selectedShipments,
+  //   'enableDailyReports': enableDailyReports,
+  //   'enableAlerts': enableAlerts,
+  // };
+  // final response = await http.post('your_api_endpoint', body: userData);
+
+  // Handle the response from the API and show appropriate feedback to the user.
+}
+
+
+
+
+
+
+void _onShipmentSelected(String shipment) {
+  print("Selected shipment: $shipment");
+  
+  // Check if the shipment is selected in the shipmentCheckboxes map
+   final checkboxValue = shipment;
+  print(checkboxValue);
+   if (checkboxValue != null && checkboxValue == true) {
+    // Shipment is selected
+    print("Selected shipment: $shipment");
+    // Perform any desired actions here
+  }
+}
+
+  void _showConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(_isDailyEnabledReports ? "Disable Daily Report?" : "Enable Daily Report?"),
+          content: Text(_isDailyEnabledReports
+              ? "Do you want to disable the daily report?"
+              : "Do you want to enable the daily report?"),
+          actions: <Widget>[
+            TextButton(
+              child: Text("No"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text("Yes"),
+              onPressed: () {
+                setState(() {
+                  _isDailyEnabledReports = !_isDailyEnabledReports;
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+void _showConfirmationDialogg() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(_isAlertsEnabled ? "Disable Daily Report?" : "Enable Daily Report?"),
+          content: Text(_isAlertsEnabled
+              ? "Do you want to disable the daily report?"
+              : "Do you want to enable the daily report?"),
+          actions: <Widget>[
+            TextButton(
+              child: Text("No"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text("Yes"),
+              onPressed: () {
+                setState(() {
+                  _isAlertsEnabled = !_isAlertsEnabled;
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('User Details'),
-      ),
-      body: Center(
-        child: Container(   
-          height: 800,
-         // width: 350, 
-        decoration: BoxDecoration(
-    image: DecorationImage(
-      image: AssetImage("assets/kk.jpg"),
-      fit: BoxFit.fill, // Set the image to cover the entire container
+      centerTitle: true,
+      title: Text('Add new User.'),
+      actions: <Widget>[
+        PopupMenuButton<String>(
+          onSelected: (String choice) {
+            // Handle menu item selection here
+            if (choice == 'Admin') {
+              setState(() {
+                selectedUserRole = 'Admin'; // Update the selected role
+              });
+            } else if (choice == 'User') {
+              setState(() {
+                selectedUserRole = 'User'; // Update the selected role
+              });
+            }
+          },
+          icon: Icon(Icons.person), // Add the user icon as the dropdown trigger
+          itemBuilder: (BuildContext context) {
+            return ['Admin', 'User'].map((String choice) {
+              return PopupMenuItem<String>(
+                value: choice,
+                child: Text(choice),
+              );
+            }).toList();
+          },
+        ),
+      ],
     ),
-  ),
-  //  border: Border.all(
-  //   //  color: Colors.red,  // Set the border color to red
-  //     width: 2.0,         // Set the border width
-  //   ),
 
+
+
+      body: Center(
+        child: Container(
+          width: 400,
+          height: 700,
+          padding: EdgeInsets.all(20),
+          // decoration: BoxDecoration(
+          //   border: Border.all(
+          //     color: Colors.black,
+          //     width: 1.0,
+          //   ),
+          // ),
           child: SingleChildScrollView(
             child: Column(
               children: [
-            CircleAvatar(
-                  backgroundImage: widget.userImage != null
-                      ? FileImage(widget.userImage!)
-                      : null,
-                  radius: 50, // Adjust the size as needed
+                SizedBox(height: 10),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: TextFormField(
+                        keyboardType: TextInputType.text,
+                        controller: _usernameController,
+                        decoration: InputDecoration(
+                          labelText: "Username",
+                          prefixIcon: Icon(Icons.person),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                Text(' ${widget.userEmail ?? 'N/A'}'),
-                 Text('Role: ${widget.subtitle ?? 'N/A'}'),
-                SizedBox(height: 40),
-             Container(
-  padding: EdgeInsets.symmetric(vertical: 10),
-  child: Row(
-    children: [
-    //SizedBox(width: 1),
-      Expanded(
-        child: TextFormField(
-          keyboardType: TextInputType.text,
-          decoration: InputDecoration(
-            labelText: "Username",
-            prefixIcon: Icon(Icons.person,color: Colors.white,),
-            labelStyle: TextStyle(color: Colors.white), // Label text color
-            border: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.white), // Border color
-              borderRadius: BorderRadius.circular(10),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.white), // Focused border color
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        ),
-      ),
-    ],
+                SizedBox(height: 10),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: TextFormField(
+                        keyboardType: TextInputType.text,
+                        controller: _EmailController,
+                        decoration: InputDecoration(
+                          labelText: "EmailID",
+                          prefixIcon: Icon(Icons.email),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10),
+                TextFormField(
+                  keyboardType: TextInputType.number,
+                  controller: _passwordController,
+                  obscureText: !_isPasswordVisible,
+                  decoration: InputDecoration(
+                    labelText: "Password",
+                    prefixIcon: Icon(Icons.lock),
+                    suffixIcon: IconButton(
+                      icon: Icon(_isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordVisible = !_isPasswordVisible;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+                TextFormField(
+                  keyboardType: TextInputType.number,
+                  controller: _ConfrompasswordController,
+                  obscureText: !_isConfrompasswordVisible,
+                  decoration: InputDecoration(
+                    labelText: "ConfromPassword",
+                    prefixIcon: Icon(Icons.lock),
+                    suffixIcon: IconButton(
+                      icon: Icon(_isConfrompasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off),
+                      onPressed: () {
+                        setState(() {
+                          _isConfrompasswordVisible = !_isConfrompasswordVisible;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+                TextFormField(
+                  keyboardType: TextInputType.number,
+                  controller: _OrgnazationController,
+                  decoration: InputDecoration(
+                    labelText: "Orgnazation",
+                    prefixIcon: Icon(Icons.business),
+                  ),
+                ),
+
+
+
+            SizedBox(height: 20), // Add spacing
+     Container(
+                  height: 400, // Adjust the height to accommodate the content
+                  width: 400,
+                 decoration: BoxDecoration(
+    border: Border.all(
+      color: Colors.greenAccent, // Border color
+      width: 1.0, // Border width
+    ),
+  ),
+                  child: Column(
+                    children: [
+                     Container(
+  height: 50, // Adjust the height as needed
+  color: Colors.white, // Set the background color
+  padding: EdgeInsets.all(10), // Add padding for the search bar
+  child: TextField(
+    decoration: InputDecoration(
+      labelText: '',
+      hintText: "select shipment",
+      prefixIcon: Icon(Icons.search),
+    ),
+    onChanged: (value) {
+      setState(() {
+        filter = value;
+        print(value);
+        final shipment=value;
+         _onShipmentSelected(shipment);
+
+      });
+    },
   ),
 ),
 
-                SizedBox(height: 10),
-              Container(
-  padding: EdgeInsets.symmetric(vertical: 10),
-  child: Row(
-    children: [
-    //SizedBox(width: 1),
-      Expanded(
-        child: TextFormField(
-          keyboardType: TextInputType.text,
-          decoration: InputDecoration(
-            labelText: "Email",
-            prefixIcon: Icon(Icons.email,color: Colors.blue,),
-            labelStyle: TextStyle(color: Colors.blue), // Label text color
-            border: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.blue), // Border color
-              borderRadius: BorderRadius.circular(10),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.blue), // Focused border color
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        ),
-      ),
-    ],
-  ),
-),
-                SizedBox(height: 10),
-                Container(
-  padding: EdgeInsets.symmetric(vertical: 10),
-  child: Row(
-    children: [
-      Expanded(
-        child: TextFormField(
-          keyboardType: TextInputType.text,
-          obscureText: !_isPasswordVisible, // Hide the password if _isPasswordVisible is false
-          decoration: InputDecoration(
-            labelText: "Password",
-            prefixIcon: Icon(Icons.lock, color: Colors.blue),
-            labelStyle: TextStyle(color: Colors.blue),
-            border: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.blue),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.blue),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            suffixIcon: IconButton(
-              icon: Icon(_isPasswordVisible ? Icons.visibility : Icons.visibility_off),
-              color: Colors.blue,
-              onPressed: () {
-                setState(() {
-                  _isPasswordVisible = !_isPasswordVisible;
-                });
-              },
-            ),
-          ),
-        ),
-      ),
-    ],
-  ),
-),
-                SizedBox(height: 10),
-                           Container(
-  padding: EdgeInsets.symmetric(vertical: 10),
-  child: Row(
-    children: [
-      Expanded(
-        child: TextFormField(
-          keyboardType: TextInputType.text,
-          obscureText: !_isPasswordVisible, // Hide the password if _isPasswordVisible is false
-          decoration: InputDecoration(
-            labelText: "ConfromPassword",
-            prefixIcon: Icon(Icons.lock, color: Colors.blue),
-            labelStyle: TextStyle(color: Colors.blue),
-            border: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.blue),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.blue),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            suffixIcon: IconButton(
-              icon: Icon(_isConfromPasswordVisible ? Icons.visibility : Icons.visibility_off),
-              color: Colors.blue,
-              onPressed: () {
-                setState(() {
-                  _isConfromPasswordVisible = !_isConfromPasswordVisible;
-                });
-              },
-            ),
-          ),
-        ),
-      ),
-    ],
-  ),
-),
-                SizedBox(height: 10),
-                Container(
-  padding: EdgeInsets.symmetric(vertical: 10),
-  child: Row(
-    children: [
-    //SizedBox(width: 1),
-      Expanded(
-        child: TextFormField(
-          keyboardType: TextInputType.text,
-          decoration: InputDecoration(
-            labelText: "Address",
-            prefixIcon: Icon(Icons.location_on,color: Colors.blue,),
-            labelStyle: TextStyle(color: Colors.blue), // Label text color
-            border: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.blue), // Border color
-              borderRadius: BorderRadius.circular(10),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.blue), // Focused border color
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        ),
-      ),
-    ],
-  ),
-),
-SizedBox(height: 10),
-Container(
-  padding: EdgeInsets.symmetric(vertical: 10),
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        "Organization",
-        style: TextStyle(
-          color: Colors.blue,
-          fontSize: 16,
-        ),
-      ),
-      SizedBox(height: 5),
-      TextFormField(
-        keyboardType: TextInputType.text,
-        decoration: InputDecoration(
-          prefixIcon: Icon(Icons.business, color: Colors.blue),
-          labelStyle: TextStyle(color: Colors.blue),
-          border: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.blue),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.blue),
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ),
-      ),
-    ],
-  ),
-),
+                 
+                    Expanded(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: shipments.length,
+                        itemBuilder: (context, index) {
+                          final shipment = shipments[index];
+                          if (shipment.toLowerCase().contains(filter.toLowerCase())) {
+                            return CheckboxListTile(
+                              title: Text(shipment),
+                              value: selectedShipment == shipment,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  print(value);
+                                  if (value == true) {
+                                    // A new shipment is selected, unselect the previously selected one
+                                    selectedShipment = shipment;
+                                    print(shipment);
+                                    _onShipmentSelected(shipment);
+                                    
+                                  } else {
+                                    // The selected shipment is unselected
+                                    selectedShipment = null;
+                                  }
+                                });
+                              },
+                            );
+                          } else {
+                            return Container();
+                          }
+                        },
+                      ),
+                    ),
+                    ],
+                  ),
+                ),
 
-                SizedBox(height: 1),
+
+                Padding(
+                  padding: EdgeInsets.only(right: 1.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text('DailyEnableReports'),
+                      Switch(
+                        value: _isDailyEnabledReports,
+                        onChanged: (value) {
+                          _showConfirmationDialog();
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: 1.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text('Enable Alerts'),
+                      Switch(
+                        value: _isAlertsEnabled,
+                        onChanged: (value) {
+                          _showConfirmationDialogg(
+                            
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Container(
                       width: 240,
                       child: ElevatedButton(
-  onPressed: () {
-    print("hello");
-    // Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardPage()));
-  },
-  child: Text('Submit',style: TextStyle(color: Colors.blue),),
-  style: ButtonStyle(
-    backgroundColor: MaterialStateProperty.all<Color>(Colors.white), // Set the background color to transparent
-    elevation: MaterialStateProperty.all<double>(0), // Remove the elevation
-    shape: MaterialStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(0), // Set the border radius
-      side: BorderSide(
-        color: Colors.grey, // Set the border color
-        width: 1.0, // Set the border width
-      ),
-    )),
-    textStyle: MaterialStateProperty.all<TextStyle>(TextStyle(
-      color: Colors.black, // Set the text color
-    )),
-  ),
-)
-,
+                        onPressed: () {
+                          print("hello");
+                          _registerUser();
+                          // Navigate to another page or perform an action
+                        },
+                        child: Text('Add'),
+                      ),
                     ),
                   ],
                 ),
@@ -277,7 +422,7 @@ Container(
             ),
           ),
         ),
-      ),
+      ), 
     );
   }
 }

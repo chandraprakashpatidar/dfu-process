@@ -9,6 +9,7 @@ import 'package:mobileapp/Dashboard/Setting/AlertsSwitch.dart';
 import 'package:mobileapp/Dashboard/Setting/SwitchListItem.dart';
 import 'package:mobileapp/Dashboard/Setting/firmware.dart';
 import 'package:mobileapp/Dashboard/Setting/LogoutListItem.dart';
+import 'package:mobileapp/Dashboard/Setting/scan_device.dart';
 
 
 class UserProfilePage extends StatefulWidget {
@@ -121,7 +122,13 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
           //buildListItem("Firmware", "1.0.0"),
           //buildListItemWithArrow("Firmware", "firmware_Update", context),
-          buildListItem("Add Device", "Add a New Device"),
+ buildListItem1("Add Device", "Add a New Device and scan",(){
+ Navigator.of(context).push(
+    MaterialPageRoute(builder: (context) => ScanDevicePage()),
+  );
+
+ }),
+
             Divider(),      
 
           
@@ -149,6 +156,15 @@ Divider(),
     );
   }
 }
+Widget buildListItem1(String label, String value, void Function() onTap) {
+  return ListTile(
+    title: Text(label),
+    subtitle: Text(value),
+    onTap: onTap,
+  );
+}
+
+
 
 
 

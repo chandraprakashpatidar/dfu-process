@@ -46,7 +46,6 @@ class _AppLoaderState extends State<AppLoader> {
     });
     
   }
-
   void checkLoginStatus() async {
     final sharedPreferences = await SharedPreferences.getInstance();
    // final  token = sharedPreferences.getString('token');
@@ -54,7 +53,6 @@ class _AppLoaderState extends State<AppLoader> {
     final password = sharedPreferences.getString('password');
  String? token = sharedPreferences.getString('token');
 Map<String, dynamic> decodedToken = token != null ? JwtDecoder.decode(token) : {};
-
     print("decodeToken---------->,$decodedToken");
     if (token != null && email != null && password != null) {
       // User is already logged in, navigate to the dashboard page.

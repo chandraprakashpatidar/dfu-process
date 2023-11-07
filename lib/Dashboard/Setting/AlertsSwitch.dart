@@ -8,7 +8,6 @@ class AlertsSwitch extends StatefulWidget {
   @override
   _AlertsSwitchState createState() => _AlertsSwitchState();
 }
-
 class _AlertsSwitchState extends State<AlertsSwitch> {
   late bool alertsEnabled;
 
@@ -17,7 +16,6 @@ class _AlertsSwitchState extends State<AlertsSwitch> {
     super.initState();
     alertsEnabled = widget.initialValue;
   }
-
   @override
   Widget build(BuildContext context) {
     return ListTile(
